@@ -3,46 +3,55 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Rutgers ISA Jeopardy</title>
+<title>Rutgers University Iranian Student Association — Jeopardy</title>
 <style>
 :root{
-  --bg:#02021a;
+  --bg:#071021;
   --panel:#07143a;
-  --accent:#ffd24d;
-  --muted:#8aa0d6;
+  --accent:#d32f2f; /* Rutgers scarlet */
+  --accent-2:#1e8f4a; /* Iranian green */
+  --gold:#ffd24d;
+  --muted:#9fb3df;
   --tile:#0b2a66;
   --used:#071022;
-  --glass: rgba(255,255,255,0.04);
-  --radius:10px;
+  --glass: rgba(255,255,255,0.03);
+  --radius:12px;
   --max-width:1100px;
-  --gap:10px;
+  --gap:12px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color-scheme: dark;
+  color: #eaf0ff;
 }
+
+/* Reset & layout */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  background:linear-gradient(180deg,var(--bg) 0%, #000018 100%);
-  color:#eaf0ff;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  background:
+    radial-gradient(1200px 400px at 10% 10%, rgba(255,255,255,0.02), transparent 6%),
+    linear-gradient(180deg,var(--bg) 0%, #000018 100%);
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:18px;
   padding:22px;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
 /* Header */
 .header {
   width:100%;
   max-width:var(--max-width);
-  background:linear-gradient(180deg,var(--panel), #07103a);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   border-radius:var(--radius);
-  padding:18px;
-  box-shadow:0 6px 30px rgba(2,6,23,0.6);
-  border:1px solid rgba(255,210,77,0.06);
+  padding:14px;
+  box-shadow:0 8px 30px rgba(2,6,23,0.6);
+  border:1px solid rgba(255,255,255,0.03);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 .header-top{
   display:flex;
@@ -53,13 +62,13 @@ body{
 }
 .title {
   display:flex;
-  gap:12px;
+  gap:14px;
   align-items:center;
 }
 .logo {
-  width:56px;
-  height:56px;
-  border-radius:8px;
+  width:64px;
+  height:64px;
+  border-radius:10px;
   background:linear-gradient(135deg,#b22222,#ff7a7a);
   display:flex;
   align-items:center;
@@ -67,9 +76,11 @@ body{
   font-weight:800;
   color:white;
   box-shadow:0 6px 18px rgba(178,34,34,0.18);
-  font-family: Georgia, "Times New Roman", serif;
+  overflow:hidden;
+  flex:0 0 64px;
 }
-h1{font-size:1.25rem;margin:0}
+.logo img{width:100%;height:100%;object-fit:cover;display:block}
+h1{font-size:1.15rem;margin:0}
 .subtitle{color:var(--muted);font-size:0.9rem;margin-top:6px}
 
 /* Controls */
@@ -80,38 +91,38 @@ h1{font-size:1.25rem;margin:0}
   flex-wrap:wrap;
 }
 .input, select, button {
-  border-radius:8px;
+  border-radius:10px;
   padding:8px 10px;
-  border:1px solid rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.04);
   background:var(--glass);
   color:inherit;
   font-size:0.95rem;
 }
-.input[type="number"]{width:80px}
+.input[type="number"]{width:88px}
 .small {font-size:0.9rem;color:var(--muted)}
 
 /* Teams area */
 .teams {
-  margin-top:12px;
+  margin-top:6px;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
 }
 .team-card{
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
   padding:8px 12px;
-  border-radius:8px;
+  border-radius:10px;
   display:flex;
   gap:10px;
   align-items:center;
-  min-width:140px;
-  border:1px solid rgba(255,210,77,0.04);
+  min-width:160px;
+  border:1px solid rgba(255,255,255,0.03);
 }
 .team-name-input{
   background:transparent;border:none;color:inherit;font-weight:700;font-size:0.95rem;
-  outline:none;width:110px;
+  outline:none;width:120px;
 }
-.team-score{font-weight:700;color:var(--accent)}
+.team-score{font-weight:800;color:var(--accent)}
 
 /* Board */
 .board-wrap{
@@ -127,26 +138,26 @@ h1{font-size:1.25rem;margin:0}
   gap:var(--gap);
   padding:18px;
   border-radius:var(--radius);
-  background:linear-gradient(180deg, rgba(7,20,58,0.6), rgba(3,8,30,0.6));
+  background:linear-gradient(180deg, rgba(3,8,30,0.6), rgba(2,6,23,0.6));
   border:1px solid rgba(255,255,255,0.03);
   box-shadow:0 10px 40px rgba(2,6,23,0.6);
 }
 .category-header{
-  background:linear-gradient(180deg,#0f3a7a,#0b2a66);
-  color:var(--accent);
+  background:linear-gradient(180deg, #0f3a7a, #0b2a66);
+  color:var(--gold);
   padding:12px;
   text-align:center;
-  font-weight:700;
+  font-weight:800;
   border-radius:8px;
+  min-height:64px;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:56px;
   text-wrap:balance;
 }
 .tile{
   background:linear-gradient(180deg,var(--tile), #07204a);
-  color:var(--accent);
+  color:var(--gold);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -162,10 +173,19 @@ h1{font-size:1.25rem;margin:0}
 .tile:hover{box-shadow:0 10px 30px rgba(2,6,23,0.6)}
 .tile.used{
   background:linear-gradient(180deg,var(--used), #020418);
-  color:#4b556b;
+  color:#6b7280;
   cursor:default;
   opacity:0.9;
   box-shadow:none;
+}
+
+/* Persian accent bar under header */
+.persian-bar{
+  height:8px;
+  border-radius:6px;
+  background:linear-gradient(90deg, #239f4a 0%, #ffffff 33%, #d32f2f 66%);
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  margin-top:6px;
 }
 
 /* Modal */
@@ -177,7 +197,7 @@ h1{font-size:1.25rem;margin:0}
 #modal-backdrop.open{display:flex}
 .modal{
   width:100%;
-  max-width:720px;
+  max-width:760px;
   background:linear-gradient(180deg,#07143a,#04102a);
   border-radius:12px;
   padding:20px;
@@ -201,17 +221,17 @@ h1{font-size:1.25rem;margin:0}
   flex-wrap:wrap;
 }
 .btn {
-  background:linear-gradient(180deg,var(--accent), #ffb84d);
+  background:linear-gradient(180deg,var(--accent), #ff7a7a);
   color:#04103a;
   border:none;
   padding:10px 14px;
   border-radius:10px;
   font-weight:800;
   cursor:pointer;
-  box-shadow:0 8px 20px rgba(255,178,77,0.12);
+  box-shadow:0 8px 20px rgba(255,178,77,0.08);
 }
 .btn.ghost{
-  background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600;
+  background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600;
 }
 
 /* Responsive */
@@ -220,7 +240,7 @@ h1{font-size:1.25rem;margin:0}
 }
 @media (max-width:520px){
   .board{grid-template-columns:repeat(1,1fr)}
-  .title h1{font-size:1rem}
+  h1{font-size:1rem}
 }
 </style>
 </head>
@@ -230,10 +250,13 @@ h1{font-size:1.25rem;margin:0}
 <div class="header" role="banner">
   <div class="header-top">
     <div class="title">
-      <div class="logo">ISA</div>
+      <div class="logo" title="Rutgers University Iranian Student Association logo">
+        <!-- Put a file named logo.png in the same folder as this HTML file -->
+        <img src="logo.png" alt="RU ISA logo" onerror="this.style.display='none'">
+      </div>
       <div>
-        <h1>Rutgers Iranian Student Association — Jeopardy</h1>
-        <div class="subtitle">Fun, fast, and ready for your intro meeting</div>
+        <h1>Rutgers University Iranian Student Association — Jeopardy</h1>
+        <div class="subtitle">A Persian‑themed trivia game for your intro meeting</div>
       </div>
     </div>
 
@@ -246,7 +269,9 @@ h1{font-size:1.25rem;margin:0}
     </div>
   </div>
 
-  <div class="teams" id="teams" aria-live="polite" style="margin-top:12px"></div>
+  <div class="persian-bar" aria-hidden="true"></div>
+
+  <div class="teams" id="teams" aria-live="polite" style="margin-top:6px"></div>
 </div>
 
 <!-- Board -->
@@ -278,7 +303,7 @@ h1{font-size:1.25rem;margin:0}
 
 <!-- Footer -->
 <div class="footer-controls">
-  <div class="small" style="color:var(--muted)">Tip: Click a tile to open the question. Use team selector to award points.</div>
+  <div class="small" style="color:var(--muted)">Tip: Click a tile to open the question. Use the team selector to award points.</div>
   <div style="display:flex;gap:8px">
     <button class="btn ghost" id="export-scores" title="Copy scores to clipboard">Copy Scores</button>
   </div>
@@ -496,11 +521,9 @@ function onTileClick(e){
   modalAnswer.textContent = `Answer: ${clue.answer}`;
   modalAnswer.hidden = true;
 
-  // ensure team select has options
   updateTeamSelect();
   modalBackdrop.classList.add('open');
   modalBackdrop.setAttribute('aria-hidden','false');
-  // focus first actionable control
   setTimeout(()=>showAnswerBtn.focus(), 50);
 }
 
@@ -519,7 +542,6 @@ function markTileUsed(){
   const el = currentClue.tileEl;
   el.classList.add('used');
   el.textContent = '';
-  // remove listeners
   el.replaceWith(el.cloneNode(true));
 }
 
@@ -569,7 +591,6 @@ startGameBtn.addEventListener('click', ()=>{
 });
 
 resetBtn.addEventListener('click', ()=>{
-  // reset scores and board (but keep team names)
   teams.forEach(t=>t.score = 0);
   updateTeamCards();
   renderBoard();
