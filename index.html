@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Rutgers ISA Jeopardy</title>
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #000022;
+  color: #fff;
+}
+header {
+  text-align: center;
+  padding: 20px;
+  background: #111155;
+  border-bottom: 3px solid #ffd700;
+}
+h1 {
+  margin: 0 0 10px;
+  font-size: 2rem;
+}
+.controls {
+  margin-top: 10px;
+}
+#teams {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.team {
+  background: #001144;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 2px solid #ffd700;
+}
+#board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 80px;
+  gap: 4px;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.category-header {
+  background: #001f5f;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.tile {
+  background: #001f5f;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.tile.used {
+  background: #000010;
+  color: #444;
+  cursor: default;
+}
+#modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#modal {
+  background: #001f5f;
+  border: 3px solid #ffd700;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+}
+.hidden { display: none; }
+#modal-answer { color: #90ee90; }
+button {
+  background: #ffd700;
+  color: #001f5f;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { background: #ffea80; }
+.modal-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Rutgers Iranian Student Association Jeopardy</h1>
+  <div class="controls">
+    <label>Number of Teams:
+      <input type="number" id="team-count" min="1" max="6" value="3" />
+    </label>
+    <button id="start-game">Start Game</button>
+  </div>
+  <div id="teams"></div>
+</header>
+
+<main id="board"></main>
+
+<div id="modal-backdrop" class="hidden">
+  <div id="modal">
+    <h2 id="modal-category"></h2>
+    <h3 id="modal-value"></h3>
+    <p id="modal-question"></p>
+    <p id="modal-answer" class="hidden"></p>
+
+    <div class="modal-controls">
+      <button id="show-answer">Show Answer</button>
+      <label>Team:
+        <select id="team-select"></select>
+      </label>
+      <button id="correct-btn">Correct</button>
+      <button id="wrong-btn">Wrong</button>
+      <button id="close-modal">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Jeopardy categories
+const categories = [
+  {
+    name: "Iran Basics",
+    clues: [
+      { value: 100, question: "Capital city of Iran.", answer: "Tehran" },
+      { value: 200, question: "Official language of Iran.", answer: "Persian (Farsi)" },
+      { value: 300, question: "Holiday marking Persian New Year.", answer: "Nowruz" },
+      { value: 400, question: "Ancient city with Persepolis ruins.", answer: "Shiraz" },
+      { value: 500, question: "Large salt lake near Tehran.", answer: "Lake Urmia" }
+    ]
+  },
+  {
+    name: "Food",
+    clues: [
+      { value: 100, question: "Rice dish with crispy bottom.", answer: "Tahdig" },
+      { value: 200, question: "Herb stew with beans.", answer: "Ghormeh Sabzi" },
+      { value: 300, question: "Minced meat kebab.", answer: "Koobideh" },
+      { value: 400, question: "Pomegranate walnut stew.", answer: "Fesenjan" },
+      { value: 500, question: "Traditional yogurt drink.", answer: "Doogh" }
+    ]
+  },
+  {
+    name: "Rutgers",
+    clues: [
+      { value: 100, question: "City of Rutgers–New Brunswick.", answer: "New Brunswick" },
+      { value: 200, question: "Rutgers mascot.", answer: "Scarlet Knight" },
+      { value: 300, question: "Rutgers primary color.", answer: "Scarlet Red" },
+      { value: 400, question: "Rutgers football stadium.", answer: "SHI Stadium" },
+      { value: 500, question: "Year Rutgers was founded.", answer: "1766" }
+    ]
+  },
+  {
+    name: "Pop Culture",
+    clues: [
+      { value: 100, question: "Legendary Iranian diva.", answer: "Googoosh" },
+      { value: 200, question: "Popular messaging app.", answer: "Telegram" },
+      { value: 300, question: "Persian politeness ritual.", answer: "Tarof" },
+      { value: 400, question: "Traditional Iranian instrument.", answer: "Tar / Setar" },
+      { value: 500, question: "Director of 'Taste of Cherry'.", answer: "Abbas Kiarostami" }
+    ]
+  },
+  {
+    name: "Random Fun",
+    clues: [
+      { value: 100, question: "Fruit symbol in Persian art.", answer: "Pomegranate" },
+      { value: 200, question: "Persian word for thank you.", answer: "Merci" },
+      { value: 300, question: "Book used for Nowruz fortune telling.", answer: "Divan of Hafez" },
+      { value: 400, question: "Persian word for hello.", answer: "Salam" },
+      { value: 500, question: "Persian backgammon-like game.", answer: "Nard" }
+    ]
+  }
+];
+
+let teams = [];
+let currentClue = null;
+
+const boardEl = document.getElementById("board");
+const teamsEl = document.getElementById("teams");
+const teamCountInput = document.getElementById("team-count");
+const startGameBtn = document.getElementById("start-game");
+
+const modalBackdrop = document.getElementById("modal-backdrop");
+const modalCategory = document.getElementById("modal-category");
+const modalValue = document.getElementById("modal-value");
+const modalQuestion = document.getElementById("modal-question");
+const modalAnswer = document.getElementById("modal-answer");
+const teamSelect = document.getElementById("team-select");
+
+document.getElementById("show-answer").onclick = () => {
+  modalAnswer.classList.remove("hidden");
+};
+document.getElementById("close-modal").onclick = () => closeModal();
+document.getElementById("correct-btn").onclick = () => score(true);
+document.getElementById("wrong-btn").onclick = () => score(false);
+
+function initTeams() {
+  const count = parseInt(teamCountInput.value);
+  teams = [];
+  teamsEl.innerHTML = "";
+  teamSelect.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    teams.push({ name: `Team ${i+1}`, score: 0 });
+
+    const div = document.createElement("div");
+    div.className = "team";
+    div.innerHTML = `<strong>${teams[i].name}</strong><br>Score: <span id="score-${i}">0</span>`;
+    teamsEl.appendChild(div);
+
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = teams[i].name;
+    teamSelect.appendChild(opt);
+  }
+}
+
+function renderBoard() {
+  boardEl.innerHTML = "";
+  categories.forEach(cat => {
+    const header = document.createElement("div");
+    header.className = "category-header";
+    header.textContent = cat.name;
+    boardEl.appendChild(header);
+  });
+
+  for (let row = 0; row < 5; row++) {
+    categories.forEach((cat, ci) => {
+      const clue = cat.clues[row];
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.textContent = `$${clue.value}`;
+      tile.onclick = () => openClue(ci, row, tile);
+      boardEl.appendChild(tile);
+    });
+  }
+}
+
+function openClue(ci, ri, tile) {
+  currentClue = { ci, ri, tile };
+  const clue = categories[ci].clues[ri];
+
+  modalCategory.textContent = categories[ci].name;
+  modalValue.textContent = `$${clue.value}`;
+  modalQuestion.textContent = clue.question;
+  modalAnswer.textContent = `Answer: ${clue.answer}`;
+  modalAnswer.classList.add("hidden");
+
+  modalBackdrop.classList.remove("hidden");
+}
+
+function score(correct) {
+  const teamIndex = parseInt(teamSelect.value);
+  const clue = categories[currentClue.ci].clues[currentClue.ri];
+  teams[teamIndex].score += correct ? clue.value : -clue.value;
+  document.getElementById(`score-${teamIndex}`).textContent = teams[teamIndex].score;
+
+  currentClue.tile.classList.add("used");
+  currentClue.tile.textContent = "";
+  currentClue.tile.onclick = null;
+
+  closeModal();
+}
+
+function closeModal() {
+  modalBackdrop.classList.add("hidden");
+  currentClue = null;
+}
+
+startGameBtn.onclick = () => {
+  initTeams();
+  renderBoard();
+};
+
+initTeams();
+renderBoard();
+</script>
+
+</body>
+</html>
