@@ -1,300 +1,599 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rutgers ISA Jeopardy</title>
 <style>
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #000022;
-  color: #fff;
+:root{
+  --bg:#02021a;
+  --panel:#07143a;
+  --accent:#ffd24d;
+  --muted:#8aa0d6;
+  --tile:#0b2a66;
+  --used:#071022;
+  --glass: rgba(255,255,255,0.04);
+  --radius:10px;
+  --max-width:1100px;
+  --gap:10px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color-scheme: dark;
 }
-header {
-  text-align: center;
-  padding: 20px;
-  background: #111155;
-  border-bottom: 3px solid #ffd700;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg) 0%, #000018 100%);
+  color:#eaf0ff;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+  padding:22px;
 }
-h1 {
-  margin: 0 0 10px;
-  font-size: 2rem;
+
+/* Header */
+.header {
+  width:100%;
+  max-width:var(--max-width);
+  background:linear-gradient(180deg,var(--panel), #07103a);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:0 6px 30px rgba(2,6,23,0.6);
+  border:1px solid rgba(255,210,77,0.06);
 }
+.header-top{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.title {
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.logo {
+  width:56px;
+  height:56px;
+  border-radius:8px;
+  background:linear-gradient(135deg,#b22222,#ff7a7a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  color:white;
+  box-shadow:0 6px 18px rgba(178,34,34,0.18);
+  font-family: Georgia, "Times New Roman", serif;
+}
+h1{font-size:1.25rem;margin:0}
+.subtitle{color:var(--muted);font-size:0.9rem;margin-top:6px}
+
+/* Controls */
 .controls {
-  margin-top: 10px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
 }
-#teams {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
+.input, select, button {
+  border-radius:8px;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,0.06);
+  background:var(--glass);
+  color:inherit;
+  font-size:0.95rem;
 }
-.team {
-  background: #001144;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 2px solid #ffd700;
+.input[type="number"]{width:80px}
+.small {font-size:0.9rem;color:var(--muted)}
+
+/* Teams area */
+.teams {
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
-#board {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: 80px;
-  gap: 4px;
-  padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
+.team-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding:8px 12px;
+  border-radius:8px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  min-width:140px;
+  border:1px solid rgba(255,210,77,0.04);
 }
-.category-header {
-  background: #001f5f;
-  color: #ffd700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
+.team-name-input{
+  background:transparent;border:none;color:inherit;font-weight:700;font-size:0.95rem;
+  outline:none;width:110px;
 }
-.tile {
-  background: #001f5f;
-  color: #ffd700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  cursor: pointer;
+.team-score{font-weight:700;color:var(--accent)}
+
+/* Board */
+.board-wrap{
+  width:100%;
+  max-width:var(--max-width);
+  display:flex;
+  justify-content:center;
 }
-.tile.used {
-  background: #000010;
-  color: #444;
-  cursor: default;
+.board {
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:var(--gap);
+  padding:18px;
+  border-radius:var(--radius);
+  background:linear-gradient(180deg, rgba(7,20,58,0.6), rgba(3,8,30,0.6));
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow:0 10px 40px rgba(2,6,23,0.6);
 }
-#modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.category-header{
+  background:linear-gradient(180deg,#0f3a7a,#0b2a66);
+  color:var(--accent);
+  padding:12px;
+  text-align:center;
+  font-weight:700;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:56px;
+  text-wrap:balance;
 }
-#modal {
-  background: #001f5f;
-  border: 3px solid #ffd700;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 600px;
-  width: 90%;
+.tile{
+  background:linear-gradient(180deg,var(--tile), #07204a);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.25rem;
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+  user-select:none;
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  box-shadow:0 6px 18px rgba(2,6,23,0.45);
 }
-.hidden { display: none; }
-#modal-answer { color: #90ee90; }
-button {
-  background: #ffd700;
-  color: #001f5f;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
+.tile:active{transform:translateY(2px)}
+.tile:hover{box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+.tile.used{
+  background:linear-gradient(180deg,var(--used), #020418);
+  color:#4b556b;
+  cursor:default;
+  opacity:0.9;
+  box-shadow:none;
 }
-button:hover { background: #ffea80; }
-.modal-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+
+/* Modal */
+#modal-backdrop{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.65));
+  z-index:60;
+}
+#modal-backdrop.open{display:flex}
+.modal{
+  width:100%;
+  max-width:720px;
+  background:linear-gradient(180deg,#07143a,#04102a);
+  border-radius:12px;
+  padding:20px;
+  border:2px solid rgba(255,210,77,0.06);
+  box-shadow:0 20px 60px rgba(2,6,23,0.7);
+}
+.modal h2{margin:0;color:var(--accent)}
+.modal h3{margin:6px 0 12px;color:var(--muted)}
+.modal p{margin:8px 0;font-size:1.05rem}
+.modal .answer{color:#9ff0b0;font-weight:700}
+.modal .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+
+/* Footer controls */
+.footer-controls{
+  width:100%;
+  max-width:var(--max-width);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.btn {
+  background:linear-gradient(180deg,var(--accent), #ffb84d);
+  color:#04103a;
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(255,178,77,0.12);
+}
+.btn.ghost{
+  background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600;
+}
+
+/* Responsive */
+@media (max-width:980px){
+  .board{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:520px){
+  .board{grid-template-columns:repeat(1,1fr)}
+  .title h1{font-size:1rem}
 }
 </style>
 </head>
-
 <body>
-<header>
-  <h1>Rutgers Iranian Student Association Jeopardy</h1>
-  <div class="controls">
-    <label>Number of Teams:
-      <input type="number" id="team-count" min="1" max="6" value="3" />
-    </label>
-    <button id="start-game">Start Game</button>
+
+<!-- Header -->
+<div class="header" role="banner">
+  <div class="header-top">
+    <div class="title">
+      <div class="logo">ISA</div>
+      <div>
+        <h1>Rutgers Iranian Student Association — Jeopardy</h1>
+        <div class="subtitle">Fun, fast, and ready for your intro meeting</div>
+      </div>
+    </div>
+
+    <div class="controls" aria-hidden="false">
+      <label class="small">Teams
+        <input class="input" id="team-count" type="number" min="1" max="10" value="3" />
+      </label>
+      <button class="btn" id="start-game">Start Game</button>
+      <button class="btn ghost" id="reset-game" title="Reset board and scores">Reset</button>
+    </div>
   </div>
-  <div id="teams"></div>
-</header>
 
-<main id="board"></main>
+  <div class="teams" id="teams" aria-live="polite" style="margin-top:12px"></div>
+</div>
 
-<div id="modal-backdrop" class="hidden">
-  <div id="modal">
+<!-- Board -->
+<div class="board-wrap">
+  <div id="board" class="board" role="grid" aria-label="Jeopardy board"></div>
+</div>
+
+<!-- Modal -->
+<div id="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-category">
     <h2 id="modal-category"></h2>
     <h3 id="modal-value"></h3>
     <p id="modal-question"></p>
-    <p id="modal-answer" class="hidden"></p>
+    <p id="modal-answer" class="answer" hidden></p>
 
-    <div class="modal-controls">
-      <button id="show-answer">Show Answer</button>
-      <label>Team:
-        <select id="team-select"></select>
+    <div class="controls">
+      <button class="btn ghost" id="show-answer">Reveal Answer</button>
+
+      <label class="small">Team
+        <select id="team-select" class="input"></select>
       </label>
-      <button id="correct-btn">Correct</button>
-      <button id="wrong-btn">Wrong</button>
-      <button id="close-modal">Close</button>
+
+      <button class="btn" id="correct-btn">Correct</button>
+      <button class="btn ghost" id="wrong-btn">Wrong</button>
+      <button class="btn ghost" id="close-modal">Close</button>
     </div>
   </div>
 </div>
 
+<!-- Footer -->
+<div class="footer-controls">
+  <div class="small" style="color:var(--muted)">Tip: Click a tile to open the question. Use team selector to award points.</div>
+  <div style="display:flex;gap:8px">
+    <button class="btn ghost" id="export-scores" title="Copy scores to clipboard">Copy Scores</button>
+  </div>
+</div>
+
 <script>
-// Jeopardy categories
+/* -------------------------
+   Data: categories & clues
+   ------------------------- */
 const categories = [
   {
     name: "Iran Basics",
     clues: [
       { value: 100, question: "Capital city of Iran.", answer: "Tehran" },
       { value: 200, question: "Official language of Iran.", answer: "Persian (Farsi)" },
-      { value: 300, question: "Holiday marking Persian New Year.", answer: "Nowruz" },
-      { value: 400, question: "Ancient city with Persepolis ruins.", answer: "Shiraz" },
-      { value: 500, question: "Large salt lake near Tehran.", answer: "Lake Urmia" }
+      { value: 300, question: "Holiday marking the Persian New Year.", answer: "Nowruz" },
+      { value: 400, question: "Ancient ceremonial capital with famous ruins.", answer: "Persepolis (near Shiraz)" },
+      { value: 500, question: "Large salt lake in northwest Iran.", answer: "Lake Urmia" }
     ]
   },
   {
     name: "Food",
     clues: [
-      { value: 100, question: "Rice dish with crispy bottom.", answer: "Tahdig" },
-      { value: 200, question: "Herb stew with beans.", answer: "Ghormeh Sabzi" },
-      { value: 300, question: "Minced meat kebab.", answer: "Koobideh" },
-      { value: 400, question: "Pomegranate walnut stew.", answer: "Fesenjan" },
-      { value: 500, question: "Traditional yogurt drink.", answer: "Doogh" }
+      { value: 100, question: "Rice dish with a prized crispy bottom.", answer: "Tahdig" },
+      { value: 200, question: "Herb stew often served with rice.", answer: "Ghormeh Sabzi" },
+      { value: 300, question: "Skewered minced meat kebab.", answer: "Koobideh" },
+      { value: 400, question: "Pomegranate and walnut chicken stew.", answer: "Fesenjan" },
+      { value: 500, question: "Savory yogurt-based drink.", answer: "Doogh" }
     ]
   },
   {
     name: "Rutgers",
     clues: [
-      { value: 100, question: "City of Rutgers–New Brunswick.", answer: "New Brunswick" },
+      { value: 100, question: "City where Rutgers–New Brunswick is located.", answer: "New Brunswick / Piscataway" },
       { value: 200, question: "Rutgers mascot.", answer: "Scarlet Knight" },
-      { value: 300, question: "Rutgers primary color.", answer: "Scarlet Red" },
-      { value: 400, question: "Rutgers football stadium.", answer: "SHI Stadium" },
+      { value: 300, question: "Rutgers primary color.", answer: "Scarlet" },
+      { value: 400, question: "Name of Rutgers football stadium.", answer: "SHI Stadium" },
       { value: 500, question: "Year Rutgers was founded.", answer: "1766" }
     ]
   },
   {
     name: "Pop Culture",
     clues: [
-      { value: 100, question: "Legendary Iranian diva.", answer: "Googoosh" },
-      { value: 200, question: "Popular messaging app.", answer: "Telegram" },
-      { value: 300, question: "Persian politeness ritual.", answer: "Tarof" },
-      { value: 400, question: "Traditional Iranian instrument.", answer: "Tar / Setar" },
-      { value: 500, question: "Director of 'Taste of Cherry'.", answer: "Abbas Kiarostami" }
+      { value: 100, question: "Legendary Iranian pop diva.", answer: "Googoosh" },
+      { value: 200, question: "Messaging app widely used in Iran.", answer: "Telegram" },
+      { value: 300, question: "Politeness ritual of over-offering.", answer: "Tarof" },
+      { value: 400, question: "Stringed instrument used in Persian music.", answer: "Tar / Setar / Santur" },
+      { value: 500, question: "Iranian director of 'Taste of Cherry'.", answer: "Abbas Kiarostami" }
     ]
   },
   {
     name: "Random Fun",
     clues: [
-      { value: 100, question: "Fruit symbol in Persian art.", answer: "Pomegranate" },
-      { value: 200, question: "Persian word for thank you.", answer: "Merci" },
-      { value: 300, question: "Book used for Nowruz fortune telling.", answer: "Divan of Hafez" },
-      { value: 400, question: "Persian word for hello.", answer: "Salam" },
-      { value: 500, question: "Persian backgammon-like game.", answer: "Nard" }
+      { value: 100, question: "Fruit often used as a symbol in Persian art.", answer: "Pomegranate" },
+      { value: 200, question: "Persian word commonly used for 'thank you'.", answer: "Merci / Mamnoon" },
+      { value: 300, question: "Book used for divination during Nowruz.", answer: "Divan of Hafez" },
+      { value: 400, question: "Common Persian greeting.", answer: "Salam" },
+      { value: 500, question: "Persian board game similar to backgammon.", answer: "Nard" }
     ]
   }
 ];
 
-let teams = [];
-let currentClue = null;
+/* -------------------------
+   State
+   ------------------------- */
+let teams = [];            // { name, score, id }
+let currentClue = null;    // { ci, ri, tileEl }
 
-const boardEl = document.getElementById("board");
-const teamsEl = document.getElementById("teams");
-const teamCountInput = document.getElementById("team-count");
-const startGameBtn = document.getElementById("start-game");
+/* -------------------------
+   DOM refs
+   ------------------------- */
+const boardEl = document.getElementById('board');
+const teamsEl = document.getElementById('teams');
+const teamCountInput = document.getElementById('team-count');
+const startGameBtn = document.getElementById('start-game');
+const resetBtn = document.getElementById('reset-game');
 
-const modalBackdrop = document.getElementById("modal-backdrop");
-const modalCategory = document.getElementById("modal-category");
-const modalValue = document.getElementById("modal-value");
-const modalQuestion = document.getElementById("modal-question");
-const modalAnswer = document.getElementById("modal-answer");
-const teamSelect = document.getElementById("team-select");
+const modalBackdrop = document.getElementById('modal-backdrop');
+const modalCategory = document.getElementById('modal-category');
+const modalValue = document.getElementById('modal-value');
+const modalQuestion = document.getElementById('modal-question');
+const modalAnswer = document.getElementById('modal-answer');
+const showAnswerBtn = document.getElementById('show-answer');
+const teamSelect = document.getElementById('team-select');
+const correctBtn = document.getElementById('correct-btn');
+const wrongBtn = document.getElementById('wrong-btn');
+const closeModalBtn = document.getElementById('close-modal');
 
-document.getElementById("show-answer").onclick = () => {
-  modalAnswer.classList.remove("hidden");
-};
-document.getElementById("close-modal").onclick = () => closeModal();
-document.getElementById("correct-btn").onclick = () => score(true);
-document.getElementById("wrong-btn").onclick = () => score(false);
+const exportBtn = document.getElementById('export-scores');
 
-function initTeams() {
-  const count = parseInt(teamCountInput.value);
+/* -------------------------
+   Helpers
+   ------------------------- */
+function clampTeams(n){
+  if (isNaN(n) || n < 1) return 1;
+  return Math.min(10, Math.floor(n));
+}
+function uid(){ return Math.random().toString(36).slice(2,9); }
+
+/* -------------------------
+   Teams UI
+   ------------------------- */
+function initTeams(count){
+  count = clampTeams(count);
   teams = [];
-  teamsEl.innerHTML = "";
-  teamSelect.innerHTML = "";
+  teamsEl.innerHTML = '';
+  teamSelect.innerHTML = '';
 
-  for (let i = 0; i < count; i++) {
-    teams.push({ name: `Team ${i+1}`, score: 0 });
+  for(let i=0;i<count;i++){
+    const id = uid();
+    const team = { id, name: `Team ${i+1}`, score: 0 };
+    teams.push(team);
 
-    const div = document.createElement("div");
-    div.className = "team";
-    div.innerHTML = `<strong>${teams[i].name}</strong><br>Score: <span id="score-${i}">0</span>`;
-    teamsEl.appendChild(div);
+    const card = document.createElement('div');
+    card.className = 'team-card';
+    card.innerHTML = `
+      <input class="team-name-input" data-id="${id}" value="${team.name}" aria-label="Team name ${i+1}" />
+      <div style="margin-left:auto;text-align:right">
+        <div class="team-score" id="score-${id}">0</div>
+        <div class="small" style="color:var(--muted);font-size:0.8rem">Score</div>
+      </div>
+    `;
+    teamsEl.appendChild(card);
 
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = teams[i].name;
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = team.name;
     teamSelect.appendChild(opt);
   }
+
+  // wire name inputs
+  teamsEl.querySelectorAll('.team-name-input').forEach(input=>{
+    input.addEventListener('input', (e)=>{
+      const id = e.target.dataset.id;
+      const t = teams.find(x=>x.id===id);
+      if(t){ t.name = e.target.value || t.name; updateTeamSelect(); updateTeamCards(); }
+    });
+  });
 }
 
-function renderBoard() {
-  boardEl.innerHTML = "";
-  categories.forEach(cat => {
-    const header = document.createElement("div");
-    header.className = "category-header";
-    header.textContent = cat.name;
-    boardEl.appendChild(header);
+function updateTeamSelect(){
+  const prev = teamSelect.value;
+  teamSelect.innerHTML = '';
+  teams.forEach(t=>{
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    teamSelect.appendChild(opt);
+  });
+  if (teams.some(t=>t.id===prev)) teamSelect.value = prev;
+}
+
+function updateTeamCards(){
+  teams.forEach(t=>{
+    const scoreEl = document.getElementById(`score-${t.id}`);
+    if(scoreEl) scoreEl.textContent = t.score;
+  });
+}
+
+/* -------------------------
+   Board rendering
+   ------------------------- */
+function renderBoard(){
+  boardEl.innerHTML = '';
+  // headers
+  categories.forEach(cat=>{
+    const h = document.createElement('div');
+    h.className = 'category-header';
+    h.textContent = cat.name;
+    boardEl.appendChild(h);
   });
 
-  for (let row = 0; row < 5; row++) {
-    categories.forEach((cat, ci) => {
-      const clue = cat.clues[row];
-      const tile = document.createElement("div");
-      tile.className = "tile";
-      tile.textContent = `$${clue.value}`;
-      tile.onclick = () => openClue(ci, row, tile);
+  // rows (max clues)
+  const max = Math.max(...categories.map(c=>c.clues.length));
+  for(let r=0;r<max;r++){
+    categories.forEach((cat,ci)=>{
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      const clue = cat.clues[r];
+      if(clue){
+        tile.textContent = `$${clue.value}`;
+        tile.tabIndex = 0;
+        tile.setAttribute('role','button');
+        tile.dataset.ci = ci;
+        tile.dataset.ri = r;
+        tile.addEventListener('click', onTileClick);
+        tile.addEventListener('keydown', (ev)=>{
+          if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); onTileClick.call(tile, ev); }
+        });
+      } else {
+        tile.classList.add('used');
+        tile.textContent = '';
+      }
       boardEl.appendChild(tile);
     });
   }
 }
 
-function openClue(ci, ri, tile) {
-  currentClue = { ci, ri, tile };
+/* -------------------------
+   Tile click
+   ------------------------- */
+function onTileClick(e){
+  const el = (this instanceof Element) ? this : e.currentTarget;
+  if(el.classList.contains('used')) return;
+  const ci = Number(el.dataset.ci);
+  const ri = Number(el.dataset.ri);
   const clue = categories[ci].clues[ri];
+  if(!clue) return;
+
+  currentClue = { ci, ri, tileEl: el };
 
   modalCategory.textContent = categories[ci].name;
   modalValue.textContent = `$${clue.value}`;
   modalQuestion.textContent = clue.question;
   modalAnswer.textContent = `Answer: ${clue.answer}`;
-  modalAnswer.classList.add("hidden");
+  modalAnswer.hidden = true;
 
-  modalBackdrop.classList.remove("hidden");
+  // ensure team select has options
+  updateTeamSelect();
+  modalBackdrop.classList.add('open');
+  modalBackdrop.setAttribute('aria-hidden','false');
+  // focus first actionable control
+  setTimeout(()=>showAnswerBtn.focus(), 50);
 }
 
-function score(correct) {
-  const teamIndex = parseInt(teamSelect.value);
+/* -------------------------
+   Scoring
+   ------------------------- */
+function applyScore(teamId, delta){
+  const t = teams.find(x=>x.id===teamId);
+  if(!t) return;
+  t.score += delta;
+  updateTeamCards();
+}
+
+function markTileUsed(){
+  if(!currentClue) return;
+  const el = currentClue.tileEl;
+  el.classList.add('used');
+  el.textContent = '';
+  // remove listeners
+  el.replaceWith(el.cloneNode(true));
+}
+
+/* -------------------------
+   Modal actions
+   ------------------------- */
+showAnswerBtn.addEventListener('click', ()=>{
+  modalAnswer.hidden = false;
+  showAnswerBtn.blur();
+});
+correctBtn.addEventListener('click', ()=>{
+  if(!currentClue) return;
+  const teamId = teamSelect.value;
   const clue = categories[currentClue.ci].clues[currentClue.ri];
-  teams[teamIndex].score += correct ? clue.value : -clue.value;
-  document.getElementById(`score-${teamIndex}`).textContent = teams[teamIndex].score;
-
-  currentClue.tile.classList.add("used");
-  currentClue.tile.textContent = "";
-  currentClue.tile.onclick = null;
-
+  applyScore(teamId, clue.value);
+  markTileUsed();
   closeModal();
-}
+});
+wrongBtn.addEventListener('click', ()=>{
+  if(!currentClue) return;
+  const teamId = teamSelect.value;
+  const clue = categories[currentClue.ci].clues[currentClue.ri];
+  applyScore(teamId, -clue.value);
+  markTileUsed();
+  closeModal();
+});
+closeModalBtn.addEventListener('click', closeModal);
 
-function closeModal() {
-  modalBackdrop.classList.add("hidden");
+function closeModal(){
+  modalBackdrop.classList.remove('open');
+  modalBackdrop.setAttribute('aria-hidden','true');
   currentClue = null;
 }
 
-startGameBtn.onclick = () => {
-  initTeams();
+/* close modal with Escape */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && modalBackdrop.classList.contains('open')) closeModal();
+});
+
+/* -------------------------
+   Start / Reset / Export
+   ------------------------- */
+startGameBtn.addEventListener('click', ()=>{
+  const count = clampTeams(Number(teamCountInput.value));
+  initTeams(count);
   renderBoard();
-};
+});
 
-initTeams();
-renderBoard();
+resetBtn.addEventListener('click', ()=>{
+  // reset scores and board (but keep team names)
+  teams.forEach(t=>t.score = 0);
+  updateTeamCards();
+  renderBoard();
+});
+
+exportBtn.addEventListener('click', async ()=>{
+  const lines = teams.map(t=>`${t.name}: ${t.score}`);
+  const text = lines.join('\n');
+  try {
+    await navigator.clipboard.writeText(text);
+    exportBtn.textContent = 'Copied';
+    setTimeout(()=>exportBtn.textContent = 'Copy Scores', 1200);
+  } catch {
+    alert('Unable to copy. Here are the scores:\n\n' + text);
+  }
+});
+
+/* -------------------------
+   Init on load
+   ------------------------- */
+(function init(){
+  initTeams(clampTeams(Number(teamCountInput.value)));
+  renderBoard();
+})();
 </script>
-
 </body>
 </html>
